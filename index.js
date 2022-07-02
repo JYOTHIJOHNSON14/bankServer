@@ -12,6 +12,12 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 
 
+//import cors
+
+const cors = require('cors')
+
+
+
 
 //import dataservice
 
@@ -22,6 +28,14 @@ const dataService = require('./services/data.service')
 //server app create using express
 
 const app = express()
+
+
+//use cors in server app
+
+app.use(cors({
+    origin:'http://localhost:4200'
+}))
+
 
 //parse JSON dATA
 
@@ -69,8 +83,11 @@ app.post('/register', (req, res) => {
     //register solving
 
     // console.log(req.body);
-    const result = dataService.register(req.body.username, req.body.acno, req.body.password)
-    res.status(result.statusCode).json(result)
+    dataService.register(req.body.username, req.body.acno, req.body.password)
+    .then(result=>{
+        res.status(result.statusCode).json(result)
+    })
+  
 })
 
 
@@ -80,8 +97,10 @@ app.post('/login', (req, res) => {
     //login solving
 
     // console.log(req.body);
-    const result = dataService.login(req.body.acno, req.body.pswd)
-    res.status(result.statusCode).json(result)
+     dataService.login(req.body.acno, req.body.pswd)
+     .then(result=>{
+        res.status(result.statusCode).json(result)
+    })
 })
 
 
@@ -92,8 +111,10 @@ app.post('/deposit', jwtMiddleware, (req, res) => {
     //deposit solving
 
     // console.log(req.body);
-    const result = dataService.deposit(req.body.acno, req.body.password, req.body.amt)
+  dataService.deposit(req.body.acno, req.body.password, req.body.amt)
+  .then(result=>{
     res.status(result.statusCode).json(result)
+})
 })
 
 
@@ -105,8 +126,10 @@ app.post('/withdraw', jwtMiddleware , (req, res) => {
     //withdraw solving
 
     // console.log(req.body);
-    const result = dataService.withdraw(req.body.acno, req.body.password, req.body.amt)
-    res.status(result.statusCode).json(result)
+     dataService.withdraw(req.body.acno, req.body.password, req.body.amt)
+     .then(result=>{
+        res.status(result.statusCode).json(result)
+    })
 })
 
 
@@ -117,8 +140,10 @@ app.post('/transaction', jwtMiddleware , (req, res) => {
     //withdraw solving
 
     // console.log(req.body);
-    const result = dataService.getTransaction(req.body.acno)
-    res.status(result.statusCode).json(result)
+     dataService.getTransaction(req.body.acno)
+     .then(result=>{
+        res.status(result.statusCode).json(result)
+    })
 })
 
 
